@@ -12,13 +12,12 @@ const PORT = 8080;
 
 const app = express();
 
-const MONGO = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DATABASE}?retryWrites=true&w=majority`;
+const MONGO = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DATABASE}`;
 
 const connection = mongoose.connect(MONGO);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/public'));
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
@@ -27,6 +26,7 @@ const httpServer = app.listen(PORT, () => {
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views');
+app.use(express.static(__dirname + '/public'));
 
 app.use('/api/users', userRoutes);
 app.use('/', viewRoutes);

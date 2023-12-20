@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: true
-    }
+    },
+    thunbnail: String
 })
 
 const userModel = mongoose.model(collection, userSchema);

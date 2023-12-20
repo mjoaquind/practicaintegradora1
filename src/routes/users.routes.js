@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import userModel from '../models/user.model.js';
+import { uploader } from '../utils.js';
 
 const router = Router();
 
@@ -20,14 +21,16 @@ router.get('/:uid', async (req, res) => {
     });
 })
 
-router.post('/', async (req, res) => {
+router.post('/', uploader.single('thumbnail'), async (req, res) => {
     const {
         first_name,
         last_name,
         email
     } = req.body;
 
-    if (!first_name || !last_name || !email) {
+    const filename = req.file.filename;
+
+    if (!first_name || !last_name || !email || !filename) {
         return res.status(400).send({
             status: "error",
             message: "Valores incompletos"
@@ -37,7 +40,8 @@ router.post('/', async (req, res) => {
     const user = {
         first_name,
         last_name,
-        email
+        email,
+        thumbnail: `http://localhost:8080/images/${filename}`
     }
 
     const result = await userModel.create(user);
